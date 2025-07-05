@@ -1,6 +1,45 @@
 # cloudrun-wp-slackbot
 A Slack Bot template running on Google Cloud Run Worker Pools
 
+## Slack Bot Setup
+
+### Prerequisites
+- Go 1.21+
+- Docker
+- Slack Bot Token and App Token
+
+### Environment Variables
+Create a `.env` file with:
+```
+SLACK_BOT_TOKEN=xoxb-your-bot-token
+SLACK_APP_TOKEN=xapp-your-app-token
+```
+
+### Running the Application
+
+**Build the container:**
+```bash
+mise run slackbot-build
+```
+
+**Run locally:**
+```bash
+mise run slackbot-run
+```
+
+**Publish to registry:**
+```bash
+mise run slackbot-publish
+```
+
+**Direct Go run:**
+```bash
+cd slackbot
+go run main.go
+```
+
+The bot responds to messages containing "hello" with a greeting.
+
 ## Emojis for Commit messages and PRs
 
 Inspired by [gitmoji.dev](https://gitmoji.dev/) and  [GitCommitEmoji.md](https://gist.github.com/parmentf/035de27d6ed1dce0b36a)

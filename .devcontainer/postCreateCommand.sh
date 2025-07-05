@@ -11,3 +11,6 @@ curl https://mise.run | sh
 # https://docs.anthropic.com/en/docs/claude-code/setup
 npm install -g @anthropic-ai/claude-code
 
+# Install CloudNative Buildpacks
+# https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/
+go get -u github.com/buildpacks/pack    

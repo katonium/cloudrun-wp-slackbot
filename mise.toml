@@ -33,3 +33,23 @@ run = "terraform apply"
 [tasks.claude]
 description = "Start Claude Code"
 run = "claude"
+
+[tasks.slackbot-build-binary]
+description = "Build Slack bot Go binary"
+run = "cd slackbot && mkdir -p build && go build -o build/main ."
+
+[tasks.slackbot-build]
+description = "Build Slack bot container image"
+depends = ["slackbot-build-binary"]
+run = "docker build -t slackbot ./slackbot"
+
+[tasks.slackbot-run]
+description = "Run Slack bot container locally"
+run = "docker run --env-file .env -it slackbot"
+
+[tasks.slackbot-publish]
+description = "Publish Slack bot container to registry"
+run = """
+docker tag slackbot gcr.io/$PROJECT_ID/slackbot:latest
+docker push gcr.io/$PROJECT_ID/slackbot:latest
+"""
