@@ -34,9 +34,14 @@ run = "terraform apply"
 description = "Start Claude Code"
 run = "claude"
 
+[tasks.slackbot-clean]
+description = "Clean Slack bot build directory"
+run = "rm -r slackbot/build"
+
 [tasks.slackbot-build-binary]
 description = "Build Slack bot Go binary"
-run = "cd slackbot && mkdir -p build && go build -o build/main ."
+depends = ["slackbot-clean"]
+run = "cd slackbot && mkdir -p build && CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags \"-static\"' -o build/main ."
 
 [tasks.slackbot-build]
 description = "Build Slack bot container image"
@@ -45,6 +50,7 @@ run = "docker build -t slackbot ./slackbot"
 
 [tasks.slackbot-run]
 description = "Run Slack bot container locally"
+depends = ["slackbot-build"]
 run = "docker run --env-file .env -it slackbot"
 
 [tasks.slackbot-publish]
