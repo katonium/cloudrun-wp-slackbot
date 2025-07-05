@@ -33,3 +33,13 @@ build/
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfplan
+terraform/*.tfvars
+terraform/crash.log
+terraform/crash.*.log

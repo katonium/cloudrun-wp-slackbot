@@ -2,6 +2,7 @@
 [tools]
 terraform = "1"
 aws-cli = "2"
+gcloud = "latest"
 
 [env]
 _.file = '.env'
@@ -10,25 +11,30 @@ _.file = '.env'
 description = "Run env to check environment variables"
 run = "env"
 
+[tasks.tf-init]
+description = "Initialize terraform configuration"
+run = "cd terraform && terraform init"
+
+[tasks.tf-reconfigure]
+description = "Reconfigure terraform backend"
+run = "cd terraform && terraform init -reconfigure"
+
+[tasks.tf-upgrade]
+description = "Upgrade terraform providers"
+run = "cd terraform && terraform init -upgrade"
+
 [tasks.plan]
 description = "Run terraform plan with configured workspace"
-run = """
-terraform init
-terraform workspace select $TF_WORKSPACE
-terraform plan
-"""
+run = "cd terraform && terraform plan"
 
 [tasks.validate]
-description = "Validate AWS credentials and terraform config"
-run = """
-aws sts get-caller-identity
-terraform validate
-"""
+description = "Validate terraform configuration"
+run = "cd terraform && terraform validate"
 
 [tasks.deploy]
 description = "Deploy infrastructure after validation"
 depends = ["validate", "plan"]
-run = "terraform apply"
+run = "cd terraform && terraform apply -auto-approve"
 
 [tasks.claude]
 description = "Start Claude Code"
@@ -55,7 +61,8 @@ run = "docker run --env-file .env -it slackbot"
 
 [tasks.slackbot-publish]
 description = "Publish Slack bot container to registry"
+depends = ["slackbot-build"]
 run = """
-docker tag slackbot gcr.io/$PROJECT_ID/slackbot:latest
-docker push gcr.io/$PROJECT_ID/slackbot:latest
+docker tag slackbot $TF_VAR_region-docker.pkg.dev/$TF_VAR_project_id/catbot/slackbot:latest
+docker push $TF_VAR_region-docker.pkg.dev/$TF_VAR_project_id/catbot/slackbot:latest
 """
