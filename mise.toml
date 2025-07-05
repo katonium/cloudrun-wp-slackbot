@@ -36,6 +36,11 @@ description = "Deploy infrastructure after validation"
 depends = ["validate", "plan"]
 run = "cd terraform && terraform apply -auto-approve"
 
+[tasks.tf-destroy]
+description = "Destroy terraform managed infrastructure"
+run = "cd terraform && terraform destroy"
+
+
 [tasks.claude]
 description = "Start Claude Code"
 run = "claude"
@@ -46,13 +51,17 @@ run = "rm -r slackbot/build"
 
 [tasks.slackbot-build-binary]
 description = "Build Slack bot Go binary"
-depends = ["slackbot-clean"]
+depends = ["slackbot-clean", "slackbot-test"]
 run = "cd slackbot && mkdir -p build && CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags \"-static\"' -o build/main ."
 
 [tasks.slackbot-build]
 description = "Build Slack bot container image"
 depends = ["slackbot-build-binary"]
 run = "docker build -t slackbot ./slackbot"
+
+[tasks.slackbot-test]
+description = "Run Slack bot tests"
+run = "cd slackbot && go test -v"
 
 [tasks.slackbot-run]
 description = "Run Slack bot container locally"
@@ -65,4 +74,12 @@ depends = ["slackbot-build"]
 run = """
 docker tag slackbot $TF_VAR_region-docker.pkg.dev/$TF_VAR_project_id/catbot/slackbot:latest
 docker push $TF_VAR_region-docker.pkg.dev/$TF_VAR_project_id/catbot/slackbot:latest
+"""
+
+[tasks.slackbot-publish-version]
+description = "Publish Slack bot container with version tag"
+depends = ["slackbot-build"]
+run = """
+docker tag slackbot $TF_VAR_region-docker.pkg.dev/$TF_VAR_project_id/catbot/slackbot:$VERSION
+docker push $TF_VAR_region-docker.pkg.dev/$TF_VAR_project_id/catbot/slackbot:$VERSION
 """

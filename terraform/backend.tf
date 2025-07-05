@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "my-bucket"
+    bucket = "terraform-remote-backend-e472"
     prefix = "catbot/prod/googlecloud"
   }
 }

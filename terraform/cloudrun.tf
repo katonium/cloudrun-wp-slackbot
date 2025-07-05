@@ -18,7 +18,7 @@ resource "google_cloud_run_v2_worker_pool" "catbot_worker_pool" {
     service_account = google_service_account.catbot_service_account.email
     
     containers {
-      image = "${var.region}-docker.pkg.dev/${var.project_id}/catbot/slackbot:latest"
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/catbot/slackbot:0.0.1-rc1"
       
       env {
         name = "SLACK_BOT_TOKEN"
