@@ -1,0 +1,16 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:linux",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.copilot-chat",
+        "github.copilot",
+        "github.copilot-workspace",
+        "github.vscode-github-actions",
+        "Anthropic.claude-code"
+      ]
+    }
+  },
+  "postCreateCommand": "/bin/bash .devcontainer/postCreateCommand.sh",
+  "forwardPorts": [8080]
+}

@@ -1,0 +1,35 @@
+# mise.toml
+[tools]
+terraform = "1"
+aws-cli = "2"
+
+[env]
+_.file = '.env'
+
+[tasks.env]
+description = "Run env to check environment variables"
+run = "env"
+
+[tasks.plan]
+description = "Run terraform plan with configured workspace"
+run = """
+terraform init
+terraform workspace select $TF_WORKSPACE
+terraform plan
+"""
+
+[tasks.validate]
+description = "Validate AWS credentials and terraform config"
+run = """
+aws sts get-caller-identity
+terraform validate
+"""
+
+[tasks.deploy]
+description = "Deploy infrastructure after validation"
+depends = ["validate", "plan"]
+run = "terraform apply"
+
+[tasks.claude]
+description = "Start Claude Code"
+run = "claude"
